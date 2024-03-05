@@ -40,36 +40,28 @@ fun Application.module() {
                 if (part is PartData.FileItem) {
                     //Create a bitmap from the image
                     val bitmap = part.streamProvider().use { its -> android.graphics.BitmapFactory.decodeStream(its) }
-
                     try {
                         //Perform OCR
                         val result = ocrHandler.googlePerformOcr(bitmap)
                         GlobalScope.launch {
+                            OcrHandler.instance?.onRecognizedTextChanged(result, bitmap)
+                        }
+                        call.respond(HttpStatusCode.OK, mapOf("message" to "File uploaded successfully"))
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.InternalServerError, mapOf("message" to e.toString()))
+                    }
+/*
+                    try {
+                        //Perform OCR
+                        val result = ocrHandler.tesseractPerformOcr(bitmap)
+                        GlobalScope.launch {
                             OcrHandler.instance?.onRecognizedTextChanged(result)
                         }
+                        //Send result to View Model to display
                         call.respond(HttpStatusCode.OK, mapOf("message" to "File uploaded successfully"))
                     } catch (e: Exception) {
                         call.respond(HttpStatusCode.InternalServerError, mapOf("message" to e.toString()))
-                    }
-
-                    /*
-                    //Create file by multipart image
-                    val file = createTempFile()
-                    part.streamProvider().use { its -> file.writeBytes(its.readBytes()) }
-                    //Perform OCR
-                    val result = ocrHandler.tesseractPerformOcr(file.toFile())
-                    //Delete temp file
-                    file.toFile().delete()
-                    //Send result to View Model to display
-                    try {
-                        GlobalScope.launch {
-                            OcrHandler.instance?._textRecognized?.postValue(result)
-                        }
-                        call.respond(HttpStatusCode.OK, mapOf("message" to "File uploaded successfully"))
-                    } catch (e: Exception) {
-                        call.respond(HttpStatusCode.InternalServerError, mapOf("message" to e.toString()))
-                    }
-                    */
+                    }*/
 
                 }
             }

@@ -132,7 +132,7 @@ fun InitContent(modifier: Modifier, navController: NavController? = null, viewMo
                     if (viewModel?.checkIfUserExists() == true) {
                         route = AppScreens.Home.route
                     }
-                    navController?.navigate(AppScreens.NextStepName.route)
+                    navController?.navigate(route)
                 },
                 shape = RoundedCornerShape(30),
                 modifier = Modifier

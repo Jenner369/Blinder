@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -91,6 +93,7 @@ fun HomeScreen(navController: NavController? = null, viewModel: HomeViewModel? =
 fun HomeContent(it: PaddingValues, navController: NavController? = null, viewModel: HomeViewModel? = null) {
     val isRunning = viewModel?.isRunning?.observeAsState(false)
     val textRecognized = viewModel?.textRecognized?.observeAsState("")
+    val bitmap = viewModel?.bitmap?.observeAsState(null)
     // Creates a CoroutineScope bound to the MainScreen lifecycle
     val scope = rememberCoroutineScope()
     var loading by remember { mutableStateOf(false) }
@@ -132,9 +135,21 @@ fun HomeContent(it: PaddingValues, navController: NavController? = null, viewMod
         if (isRunning!!.value) {
             Text(text = "Servidor corriendo", color = Color.Green)
         }
-        ContentColumn(modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(
-            rememberScrollState()
-        )) {
+        if (bitmap?.value != null) {
+            Image(
+                bitmap = bitmap.value!!.asImageBitmap(),
+                contentDescription = "Image",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            )
+        }
+        ContentColumn(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(
+                rememberScrollState()
+            )) {
             Text(text = textRecognized!!.value)
         }
     }

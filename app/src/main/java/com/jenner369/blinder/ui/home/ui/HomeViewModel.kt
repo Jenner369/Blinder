@@ -1,6 +1,7 @@
 package com.jenner369.blinder.ui.home.ui
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import androidx.annotation.RequiresApi
@@ -32,6 +33,8 @@ class HomeViewModel(
     private val _isRunning = MutableLiveData<Boolean>()
     val isRunning: LiveData<Boolean> = _isRunning
 
+    private val _bitmap = MutableLiveData<Bitmap>()
+    val bitmap: LiveData<Bitmap> = _bitmap
 
     fun getCurrentName(): String {
         return userDbSQLiteHelper.getUniqueUser()
@@ -42,8 +45,9 @@ class HomeViewModel(
         _textRecognized.value = ""
     }
 
-    fun onRecognizedTextChanged(text: String) {
+    fun onRecognizedTextChanged(text: String, bitmap: Bitmap) {
         _textRecognized.postValue(text)
+        _bitmap.postValue(bitmap)
         tts.speak(text.trim(), TextToSpeech.QUEUE_FLUSH, null, null)
     }
 

@@ -25,8 +25,8 @@ class OcrHandler(private val dataPath: String) {
         }
     }
 
-    fun tesseractPerformOcr(imageFile: File): String {
-        tessBaseAPI.setImage(imageFile)
+    fun tesseractPerformOcr(bitmap: Bitmap): String {
+        tessBaseAPI.setImage(bitmap)
         val text: String = tessBaseAPI.utF8Text
         return text
     }
