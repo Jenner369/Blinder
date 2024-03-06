@@ -57,12 +57,24 @@ dependencies {
     val nav_version = "2.5.3"
     val ktor_version = "1.6.4"
 
+
     implementation ("io.ktor:ktor-server-netty:$ktor_version")
     implementation ("io.ktor:ktor-server-core:$ktor_version")
     implementation ("io.ktor:ktor-gson:$ktor_version")
 
+    //implementation ("com.google.cloud:google-cloud-vision:3.34.0")
     implementation ("com.google.mlkit:text-recognition:16.0.0")
 
+
+    implementation("com.google.api-client:google-api-client-android:1.22.0")
+    implementation("com.google.apis:google-api-services-vision:v1-rev357-1.22.0")
+    implementation("com.google.code.findbugs:jsr305:2.0.1")
+/*    implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+
+    implementation (platform ("com.google.cloud:libraries-bom:26.33.0"))
+
+    implementation ("com.google.cloud:google-cloud-storage")
+*/
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
@@ -88,4 +100,5 @@ dependencies {
 
 
     implementation("cz.adaptech.tesseract4android:tesseract4android:4.7.0")
+    implementation ("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
 }
