@@ -1,8 +1,12 @@
 package com.jenner369.blinder.ui.home.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.wifi.WifiManager
 import android.os.Build
+import android.text.format.Formatter
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.rememberScrollableState
@@ -10,6 +14,7 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +32,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -41,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -99,6 +106,7 @@ fun HomeContent(it: PaddingValues, navController: NavController? = null, viewMod
     val bitmap = viewModel?.bitmap?.observeAsState(null)
     // Creates a CoroutineScope bound to the MainScreen lifecycle
     val scope = rememberCoroutineScope()
+    val selectedOption = viewModel?.selectedOption?.observeAsState("GCS")
     var loading by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -106,6 +114,7 @@ fun HomeContent(it: PaddingValues, navController: NavController? = null, viewMod
             .padding(it),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val context = LocalContext.current
         Text(text = "Bienvenido, ${viewModel?.getCurrentName()}", color = Color.Black, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.padding(8.dp))
         Button(onClick = {
@@ -135,6 +144,26 @@ fun HomeContent(it: PaddingValues, navController: NavController? = null, viewMod
         }) {
             Text(text = "Cambiar nombre")
         }
+
+        if (!isRunning!!.value) {
+            Spacer(modifier = Modifier.padding(8.dp))
+            Row {
+                RadioButton(
+                    selected = selectedOption!!.value == "GCS",
+                    onClick = { viewModel.changeOptionSelected("GCS") }
+                )
+                Text("Google Cloud Vision (Requiere Internet, más preciso pero lento)")
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Row {
+                RadioButton(
+                    selected = selectedOption!!.value == "MLG",
+                    onClick = { viewModel.changeOptionSelected("MLG") }
+                )
+                Text("ML Google Kit v2 (No requiere de internet, más rápido, pero menos preciso)")
+            }
+        }
+
         if (isRunning!!.value) {
             Text(text = "Servidor corriendo", color = Color.Green)
         }

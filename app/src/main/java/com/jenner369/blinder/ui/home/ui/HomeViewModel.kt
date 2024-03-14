@@ -36,6 +36,9 @@ class HomeViewModel(
     private val _bitmap = MutableLiveData<Bitmap>()
     val bitmap: LiveData<Bitmap> = _bitmap
 
+    val _selectedOption = MutableLiveData<String>()
+    val selectedOption: LiveData<String> = _selectedOption
+
     fun getCurrentName(): String {
         return userDbSQLiteHelper.getUniqueUser()
     }
@@ -46,9 +49,20 @@ class HomeViewModel(
     }
 
     fun onRecognizedTextChanged(text: String, bitmap: Bitmap) {
+        stopSpeech()
         _textRecognized.postValue(text)
         _bitmap.postValue(bitmap)
         tts.speak(text.trim(), TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun changeOptionSelected(opt: String) {
+        _selectedOption.postValue(opt)
+        OcrHandler.optionSelected = opt
+    }
+
+    fun speechProcessingImage() {
+        stopSpeech()
+        tts.speak("Procesando imagen", TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

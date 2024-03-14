@@ -33,12 +33,24 @@ fun Application.module() {
             call.respond(mapOf("message" to "Hello, world!"))
         }
         post("/api/upload") {
+            OcrHandler.instance?.speechProcessingImage()
             call.receiveMultipart().forEachPart { part ->
                 if (part is PartData.FileItem) {
                     //Create a bitmap from the image
                     val bitmap = part.streamProvider().use { its -> android.graphics.BitmapFactory.decodeStream(its) }
                     try {
-                        val result = ocrHandler.detectText(bitmap)
+                        var result = "";
+                        result = if (OcrHandler.optionSelected == "GCS") {
+                            ocrHandler.detectText(bitmap)
+                        } else {
+                            ocrHandler.googlePerformOcr(bitmap)
+                        }
+
+
+
+
+
+
                         GlobalScope.launch {
                             OcrHandler.instance?.onRecognizedTextChanged(result, bitmap)
                         }

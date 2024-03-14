@@ -53,7 +53,10 @@ class OcrHandler(private val dataPath: String) {
 
     fun tesseractPerformOcr(bitmap: Bitmap): String {
         tessBaseAPI.setImage(bitmap)
-        val text: String = tessBaseAPI.utF8Text
+        var text: String = tessBaseAPI.utF8Text
+        if (text == null|| text.isEmpty() || text.isBlank()) {
+            text = "No se ha detectado texto"
+        }
         return text
     }
 
@@ -92,7 +95,15 @@ class OcrHandler(private val dataPath: String) {
         val image = InputImage.fromBitmap(bitmapFocused, 0)
         val result = googleRecognizer.process(image)
         Tasks.await(result)
-        return result.result.text
+        var text = result.result.text
+        if (
+
+
+
+            text.isEmpty() || text.isBlank()) {
+            text = "No se ha detectado texto"
+        }
+        return text
     }
 
     private fun applyFocusFilter(bitmap: Bitmap): Bitmap {
@@ -184,5 +195,6 @@ class OcrHandler(private val dataPath: String) {
 
     companion object {
         var instance : HomeViewModel? = null
+        var optionSelected : String = "GCS"
     }
 }
